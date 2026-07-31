@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"container/list"
 	"fmt"
 	"strconv"
 	"strings"
@@ -23,6 +24,10 @@ type Integer interface {
 
 type Float interface {
 	~float32 | ~float64
+}
+
+type InsertListFromArrayInterface interface {
+	Numeric | Float | string
 }
 
 func Add[T Numeric](a, b T) T {
@@ -149,4 +154,13 @@ func IsAgeValid(age int) bool {
 	}
 
 	return true
+}
+
+func InsertListFromArray[T InsertListFromArrayInterface](array []T) *list.List {
+	var data *list.List = list.New()
+	for _, e := range array {
+		data.PushBack(e)
+	}
+
+	return data
 }
