@@ -3,6 +3,8 @@ package helper
 import (
 	"container/list"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -163,4 +165,70 @@ func InsertListFromArray[T InsertListFromArrayInterface](array []T) *list.List {
 	}
 
 	return data
+}
+
+func CreateNewFile(targetPath, filename, message string) error {
+	filePath := filepath.Join(targetPath, filename)
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	_, err = file.WriteString(message)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ReadFile(targetPath, filename string) (string, error) {
+	filePath := filepath.Join(targetPath, filename)
+	file, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+
+	return string(file), nil
+}
+
+func AddToFile(filename, message string) error {
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	file.WriteString(message)
+	return nil
+}
+
+func IsFolderExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
+}
+
+func CreateFolder(name string) error {
+	err := os.Mkdir(name, 0755)
+	if err != nil {
+		fmt.Println("Error creating folder: ", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func CheckFolderExistance(name string) (bool, error) {
+	isFolderExists := IsFolderExists(name)
+	if !isFolderExists {
+		err := CreateFolder(name)
+		if err != nil {
+			return false, err
+		}
+	}
+
+	fmt.Printf("✓ Folder '%s' telah dibuat\n", name)
+	return true, nil
 }

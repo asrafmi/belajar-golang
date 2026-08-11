@@ -1,0 +1,5 @@
+[2026-08-11 10:15:30] INFO: Aplikasi dimulai
+[2026-08-11 10:16:45] WARNING: Memory usage tinggi
+[2026-08-11 10:17:10] ERROR: Database connection failed
+[2026-08-11 10:18:00] INFO: Retry connection
+[2026-08-11 10:18:30] INFO: Connected to database

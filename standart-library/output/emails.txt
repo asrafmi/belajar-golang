@@ -1,0 +1,3 @@
+✓ john@example.com - Valid, disimpan ke file
+✗ alice.invalid - Invalid: should contains '@'
+✓ bob@gmail.com - Valid, disimpan ke file
