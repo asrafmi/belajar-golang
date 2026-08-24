@@ -92,3 +92,57 @@ func TestMultiply(t *testing.T) {
 		assert.Equal(t, -2.5, result, "Result must be -2.5")
 	})
 }
+
+type NumericConstraint interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
+		~float32 | ~float64
+}
+
+type TestCasesMultiplyType[T NumericConstraint] struct {
+	name     string
+	a        T
+	b        T
+	expected T
+	error    string
+}
+
+func TestTableMultiply(t *testing.T) {
+	testCases := []TestCasesMultiplyType[float64]{
+		{
+			name:     "PositiveIntAssert",
+			a:        2.0,
+			b:        1.0,
+			expected: 2.0,
+			error:    "Result must be 2",
+		},
+		{
+			name:     "NegativeIntAssert",
+			a:        -2.0,
+			b:        1.0,
+			expected: -2.0,
+			error:    "Result must be -2",
+		},
+		{
+			name:     "PositiveFloatAssert",
+			a:        2.5,
+			b:        1.0,
+			expected: 2.5,
+			error:    "Result must be 2.5",
+		},
+		{
+			name:     "NegativeFloatAssert",
+			a:        -2.5,
+			b:        1.0,
+			expected: -2.5,
+			error:    "Result must be -2.5",
+		},
+	}
+
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
+			result := Multiply(test.a, test.b)
+			assert.Equal(t, test.expected, result, test.error)
+		})
+	}
+}
