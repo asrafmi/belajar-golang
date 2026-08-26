@@ -49,6 +49,13 @@ func TestSkip(t *testing.T) {
 	assert.Equal(t, 3, result, "Result must be 3")
 }
 
+func BenchmarkMinus(b *testing.B) {
+	var result int
+	for i := 0; b.Loop(); i++ {
+		result = Minus(i+1, i)
+	}
+	_ = result
+}
 func TestMinus(t *testing.T) {
 	t.Run("PositiveIntAssert", func(t *testing.T) {
 		result := Minus(2, 1)
@@ -107,6 +114,13 @@ type TestCasesMultiplyType[T NumericConstraint] struct {
 	error    string
 }
 
+func BenchmarkMultiply(b *testing.B) {
+	var result int
+	for i := 0; b.Loop(); i++ {
+		result = Multiply(i, i+1)
+	}
+	_ = result
+}
 func TestTableMultiply(t *testing.T) {
 	testCases := []TestCasesMultiplyType[float64]{
 		{
