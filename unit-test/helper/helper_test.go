@@ -115,11 +115,37 @@ type TestCasesMultiplyType[T NumericConstraint] struct {
 }
 
 func BenchmarkMultiply(b *testing.B) {
-	var result int
-	for i := 0; b.Loop(); i++ {
-		result = Multiply(i, i+1)
+	testCases := []TestCasesMultiplyType[float64]{
+		{
+			name: "PositiveIntAssert",
+			a:    2.0,
+			b:    1.0,
+		},
+		{
+			name: "NegativeIntAssert",
+			a:    -2.0,
+			b:    1.0,
+		},
+		{
+			name: "PositiveFloatAssert",
+			a:    2.5,
+			b:    1.0,
+		},
+		{
+			name: "NegativeFloatAssert",
+			a:    -2.5,
+			b:    1.0,
+		},
 	}
-	_ = result
+	for _, test := range testCases {
+		b.Run(test.name, func(b *testing.B) {
+			var result int
+			for i := 0; b.Loop(); i++ {
+				result = Multiply(int(test.a), int(test.b))
+			}
+			_ = result
+		})
+	}
 }
 func TestTableMultiply(t *testing.T) {
 	testCases := []TestCasesMultiplyType[float64]{
