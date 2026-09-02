@@ -68,3 +68,55 @@ func TestChannelAsParameter(t *testing.T) {
 	data := <-channel
 	fmt.Println(data)
 }
+
+func OnlyIn(channel chan<- string) {
+	time.Sleep(2 * time.Second)
+	channel <- "Jokowi"
+}
+
+func OnlyOut(channel <-chan string) {
+	time.Sleep(2 * time.Second)
+	data := <-channel
+	fmt.Println(data)
+}
+
+func TestInOutChannel(t *testing.T) {
+	channel := make(chan string)
+	defer close(channel)
+
+	go OnlyIn(channel)
+	go OnlyOut(channel)
+
+	time.Sleep(5 * time.Second)
+}
+
+func TestBufferedChannel(t *testing.T) {
+	channel := make(chan string, 2)
+	defer close(channel)
+
+	channel <- "Joko"
+	channel <- "Widodo"
+
+	fmt.Println(<-channel)
+	fmt.Println(<-channel)
+
+	fmt.Println("Selesai")
+}
+
+func TestBufferedChannelGoroutine(t *testing.T) {
+	channel := make(chan string, 2)
+	defer close(channel)
+
+	go func() {
+		channel <- "Joko"
+		channel <- "Widodo"
+	}()
+
+	go func() {
+		fmt.Println(<-channel)
+		fmt.Println(<-channel)
+	}()
+
+	time.Sleep(2 * time.Second)
+	fmt.Println("Selesai")
+}
