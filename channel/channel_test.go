@@ -128,6 +128,7 @@ func TestBufferedChannelGoroutine(t *testing.T) {
 
 func TestRangeChannel(t *testing.T) {
 	channel := make(chan string)
+	defer close(channel)
 
 	go func() {
 		for i := 0; i < 10; i++ {
@@ -146,6 +147,8 @@ func TestRangeChannel(t *testing.T) {
 func TestSelectChannel(t *testing.T) {
 	channel1 := make(chan string)
 	channel2 := make(chan string)
+	defer close(channel1)
+	defer close(channel2)
 
 	go GiveMeResponse(channel1, "Channel 1")
 	go GiveMeResponse(channel2, "Channel 2")
