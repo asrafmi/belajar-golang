@@ -1,0 +1,19 @@
+package database
+
+import (
+	"database/sql"
+	"time"
+)
+
+func GetConnection() *sql.DB {
+	db, err := sql.Open("mysql", "root:12345678@tcp(localhost:3306)/belajar_golang_database")
+	if err != nil {
+		panic(err)
+	}
+	db.SetMaxIdleConns(10)
+	db.SetMaxOpenConns(50)
+	db.SetConnMaxIdleTime(5 * time.Minute)
+	db.SetConnMaxLifetime(1 * time.Hour)
+
+	return db
+}
