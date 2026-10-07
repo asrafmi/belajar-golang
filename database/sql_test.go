@@ -162,3 +162,53 @@ func TestExecSQLSafe(t *testing.T) {
 
 	fmt.Println("Success")
 }
+
+func TestExecLastInsertID(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	email := "prabowo@example.com"
+	comment := "prabowo gemoy"
+
+	ctx := context.Background()
+	q := "INSERT INTO comments(email, comment) VALUES(?, ?)"
+	result, err := db.ExecContext(ctx, q, email, comment)
+	if err != nil {
+		panic(err)
+	}
+
+	lastInsertedId, err := result.LastInsertId()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Success insert new comment with id", lastInsertedId)
+}
+
+func TestPrepareStatement(t *testing.T) {
+	db := GetConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+	q := "INSERT INTO comments(email, comment) VALUES(?, ?)"
+	statement, err := db.PrepareContext(ctx, q)
+	if err != nil {
+		panic(err)
+	}
+	defer statement.Close()
+
+	for i := 0; i < 10; i++ {
+		email := fmt.Sprintf("user%d@example.com", i)
+		comment := fmt.Sprintf("Comment %d", i)
+		result, err := statement.ExecContext(ctx, email, comment)
+		if err != nil {
+			panic(err)
+		}
+		lastInsertedId, err := result.LastInsertId()
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println("Success insert new comment with id", lastInsertedId)
+	}
+}
